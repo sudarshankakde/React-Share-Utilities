@@ -1,4 +1,4 @@
-import type { OSType } from "../../../pakage/types";
+import type { OSType } from "../../index.d.ts";
 
 /**
  * Detect device OS from user agent
@@ -27,3 +27,4 @@ function detectOS(): OSType {
 }
 
 export { detectOS };
+export default detectOS;

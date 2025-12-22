@@ -1,19 +1,9 @@
 import React from "react";
-import type { ShareInput, SocialPlatform } from "../types";
 import SocialShareButton from "./SocialShareButton";
-import { ICONS } from "../../src/assets";
+import { ICONS } from "../assets";
 import "./fallback.css";
 import useShare from "../hooks/useShare";
-
-export type ShareFallbackModalProps = {
-	open: boolean;
-	onClose: () => void;
-	data: ShareInput | null;
-	/** Platforms to show in the modal */
-	platforms?: SocialPlatform[];
-	/** Optional modal title */
-	title?: string;
-};
+import type { SocialPlatform ,ShareFallbackModalProps, ShareInput } from "../index.d.ts";
 
 const DEFAULT_PLATFORMS: SocialPlatform[] = [
 	"whatsapp",

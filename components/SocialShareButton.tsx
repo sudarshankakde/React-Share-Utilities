@@ -1,64 +1,12 @@
-/**
- * SocialShareButton Component
- * 
- * Share content directly to social platforms using socialUrl() and openSocialShare()
- * 
- * Supported Platforms & Field Support:
- * - LinkedIn: ✓ url only (title, text, hashtags, via are IGNORED)
- * - Twitter/X: ✓ url, text, via, hashtags (NO files)
- * - Facebook: ✓ url only (other fields ignored)
- * - Reddit: ✓ url, title
- * - WhatsApp: ✓ text, url (combines as "text url")
- * - Telegram: ✓ text, url
- * - Email: ✓ title (subject), text (body) - no url in body for email
- * 
- * Usage:
- * ```tsx
- * import SocialShareButton from './components/SocialShareButton';
- * import { useShare } from './hooks/useShare';
- * 
- * const { openSocialShare, socialUrl } = useShare();
- * 
- * // Open in new window
- * <SocialShareButton 
- *   platform="linkedin"
- *   params={{ url: "https://example.com" }}
- *   openSocialShare={openSocialShare}
- *   label="Share on LinkedIn"
- * />
- * 
- * // Get URL without opening
- * <SocialShareButton 
- *   platform="twitter"
- *   params={{ 
- *     url: "https://example.com",
- *     text: "Check this out!",
- *     hashtags: ["react", "sharing"]
- *   }}
- *   socialUrl={socialUrl}
- *   getUrlOnly={true}
- *   onGetUrl={(url) => console.log("Share URL:", url)}
- * />
- * ```
- */
 
 import React from "react";
 import type { ReactNode } from "react";
-import type { SocialPlatform, SocialParams } from "../types";
+import type { Variant,Size,Color,SocialShareButtonProps, SocialPlatform } from "../index.d.ts";
 import "./Button.css";
-import { ICONS } from "../../src/assets";
+import { ICONS } from "../assets";
 
-type Variant =
-  | "solid"
-  | "outline"
-  | "ghost"
-  | "soft"
-  | "link"
-  | "destructive"
-  | "custom";
 
-type Color = "primary" | "success" | "danger" | "warning" | "neutral";
-type Size = "sm" | "md" | "lg";
+
 
 const VARIANTS: Record<Variant, string> = {
   solid: "variant-solid",
@@ -99,44 +47,6 @@ const PLATFORM_INFO: Record<SocialPlatform, { label: string; color: Color; icon:
   instagram: { label: "Instagram", color: "danger", icon: ICONS.instagram || "bi-instagram" },
   snapchat: { label: "Snapchat", color: "warning", icon: ICONS.snapchat || "bi-snapchat" },
 };
-
-export type SocialShareButtonProps = {
-  /** Social platform to share to */
-  platform: SocialPlatform;
-  /** Share parameters - platform support varies (see documentation) */
-  params: SocialParams;
-  /** Function to open social share (opens in new window) */
-  openSocialShare?: (
-    platform: SocialPlatform,
-    params: SocialParams,
-    target?: string
-  ) => string;
-  /** Function to get social share URL without opening */
-  socialUrl?: (platform: SocialPlatform, params: SocialParams) => string;
-  /** If true, gets URL instead of opening window */
-  getUrlOnly?: boolean;
-  /** Callback when URL is generated (for getUrlOnly mode) */
-  onGetUrl?: (url: string) => void;
-  /** Button label (defaults to platform name) */
-  label?: ReactNode;
-  /** Custom button className */
-  className?: string;
-  /** Disable the button */
-  disabled?: boolean;
-  /** Styling variant */
-  variant?: Variant;
-  /** Color scheme */
-  color?: Color;
-  /** Size */
-  size?: Size;
-  /** Custom HTML element to render as */
-  as?: React.ElementType;
-  /** Target for window.open (default: "_blank") */
-  target?: string;
-
-  /** Show label text (default: true) */
-  showLabel?: boolean;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
 
 /**
  * SocialShareButton - Share to social platforms

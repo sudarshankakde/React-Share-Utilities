@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import type {  SocialParams, SocialPlatform , ShareInput,UseShareOptions } from "../../pakage/types";
+import type {  SocialParams, SocialPlatform , ShareInput,UseShareOptions, UseShareReturn } from "../index.d.ts";
 import { detectPlatform } from "./helper/detectPlatform";
 import { buildSocialUrl } from "./deeplink/DeepLink";
 import  useClipboard from "./useClipboard";
@@ -32,7 +32,7 @@ export function toShareData(input: ShareInput): ShareData {
 
 
 // use share is used to share content via Web Share API or fallback methods
-function useShare(options: UseShareOptions = {}) {
+function useShare(options: UseShareOptions = {}): UseShareReturn {
   const {
     timeout = 2000,
     preferNative = true,
@@ -167,7 +167,7 @@ function useShare(options: UseShareOptions = {}) {
           const msg = messages?.error ? messages.error(err) : err.message;
           toast.error(msg);
         }
-        return { ok: false as const, error: err };
+        return { ok: false as const, error: err, method: "native" as const };
       }
     },
     [
@@ -193,11 +193,12 @@ function useShare(options: UseShareOptions = {}) {
   );
 
   const support = useMemo(
-    () => ({
+    () => {
+      return {
       webShare: supportsWebShare,
-      canShareFiles: supportsCanShare,
+      canShare: supportsCanShare,
       clipboard: supportsClipboard,
-    }),
+    }},
     [supportsWebShare, supportsCanShare, supportsClipboard]
   );
 

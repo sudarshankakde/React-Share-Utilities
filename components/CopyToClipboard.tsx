@@ -49,22 +49,9 @@ import React, { useEffect } from "react";
 import type { ReactNode } from "react";
 
 import "./Button.css";
-import { ICONS } from "../../assets/CopyToClipboard";
-import useClipboard from "../../hooks/useClipboard";
-import type { UseCopyClipboardOptions } from "../../types";
-
-
-type Variant =
-	| "solid"
-	| "outline"
-	| "ghost"
-	| "soft"
-	| "link"
-	| "destructive"
-	| "custom";
-
-type Color = "primary" | "success" | "danger" | "warning" | "neutral";
-type Size = "sm" | "md" | "lg";
+import { ICONS } from "../assets/CopyToClipboard";
+import useClipboard from "../hooks/useClipboard";
+import type { Variant, Size,Color, CopyToClipboardProps} from "../index.d.ts";
 
 type ShareIconName = "share-fill" | "share" | "copy";
 type SuccessIconName = "success";
@@ -95,67 +82,12 @@ const SIZES: Record<Size, string> = {
 	lg: "size-lg",
 };
 
-/**
- * Props for CopyToClipboard button component
- * 
- * @param data - Content to copy. Copies in priority order: text → url → JSON stringified object
- * @param customLabelIcons - Icon state names or custom ReactNode elements
- *   Available icons: "share-fill", "share", "success", "error", "busy-clock", "busy-loader"
- * @param className - Custom CSS classes. Overrides all preset styles when variant="custom"
- * @param variant - Styling variant. Use "custom" for zero preset styles
- * @param options - useShare options (timeout, messages, toast callbacks)
- * 
- * Note: This component forces clipboard path (preferNative: false, fallback: "clipboard")
- *       so it will always copy to clipboard regardless of Web Share API availability.
- */
 const defaultCustomLabelIcons = {
   default: "copy",
   busy: "busy-clock",
   error: "error",
   success: "success",
 };
-export type CopyToClipboardProps = {
-	/** Content to copy - will auto-serialize based on content type */
-	data: string;
-	/** Optional ID for tracking copy events */
-	id?: string;
-	/** Label text or node shown by default */
-	label?: ReactNode;
-	/** Label shown while copying */
-	busyLabel?: ReactNode;
-	/** Label shown after successful copy */
-	successLabel?: ReactNode;
-	/** Custom CSS classes (overrides presets when used) */
-	className?: string;
-	/** Disable the button */
-	disabled?: boolean;
-	/** Icon state mappings - use icon names or custom JSX */
-	customLabelIcons?: {
-		/** Icon when idle - e.g., "share-fill" or <CustomIcon /> */
-		default?: ShareIconName | ReactNode;
-		/** Icon while copying */
-		success?: SuccessIconName | ReactNode;
-		/** Icon on error */
-		error?: ErrorIconName | ReactNode;
-		busy?: BusyIconName | ReactNode;
-	};
-	/** Share hook options - timeout, messages, toast callbacks 
-	 *  NOTE: fallback and preferNative are forced (clipboard only) */
-	options?: UseCopyClipboardOptions;
-	/** Callback on successful copy */
-	onSuccess?: UseCopyClipboardOptions["onSuccess"];
-	/** Callback on copy error */
-	onError?: UseCopyClipboardOptions["onError"];
-	/** Custom HTML element to render as (default: "button") */
-	as?: React.ElementType;
-	/** Styling variant ("solid", "outline", "ghost", "soft", "link", "destructive", "custom") */
-	variant?: Variant;
-	/** Color scheme ("primary", "success", "danger", "warning", "neutral") */
-	color?: Color;
-	/** Size ("sm", "md", "lg") */
-	size?: Size;
-  showLabel?: boolean;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
 
 function CopyToClipboard({
   showLabel = true,

@@ -7,18 +7,7 @@ import { generateDeepLink } from "../hooks/deeplink/DeepLink";
 import { detectOS } from "../hooks/helper/detectOS";
 import { detectPlatform } from "../hooks/helper/detectPlatform";
 import { openLink } from "../hooks/deeplink/openLink";
-
-type Variant =
-	| "solid"
-	| "outline"
-	| "ghost"
-	| "soft"
-	| "link"
-	| "destructive"
-	| "custom";
-
-type Color = "primary" | "success" | "danger" | "warning" | "neutral";
-type Size = "sm" | "md" | "lg";
+import type { Variant ,Size,Color, DeepLinkOpenProps, } from "../index.d.ts";
 
 const VARIANTS: Record<Variant, string> = {
 	solid: "variant-solid",
@@ -44,28 +33,6 @@ const SIZES: Record<Size, string> = {
 	lg: "size-lg",
 };
 
-export type DeepLinkOpenProps = {
-	/** Web URL to open; deep link is derived automatically */
-	url: string;
-	/** Optional label; defaults to "Open in app" */
-	label?: ReactNode;
-	/** Button variant */
-	variant?: Variant;
-	/** Color scheme */
-	color?: Color;
-	/** Size */
-	size?: Size;
-	/** Custom classes (use variant="custom" to skip presets) */
-	className?: string;
-	/** Disable button */
-	disabled?: boolean;
-	/** Options controlling fallback behavior */
-	options?: OpenLinkOptions;
-	/** Callback fired after invoking deep link */
-	onOpened?: (info: { deepLink: DeepLinkResult; os: string }) => void;
-	/** Render as a different element */
-	as?: React.ElementType;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
 
 
 

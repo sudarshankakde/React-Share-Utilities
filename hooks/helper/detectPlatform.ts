@@ -5,7 +5,7 @@
  * Supports deep linking for: YouTube, Instagram, TikTok, LinkedIn, Twitter, Telegram, Facebook, WhatsApp, Spotify
  */
 
-import type { DeepLinkPlatform } from "../../../pakage/types";
+import type { DeepLinkPlatform } from "../../index.d.ts";
 import { generateDeepLink } from "../deeplink/DeepLink";
 
 // Small helper: determine platform name from URL via deep-link detection

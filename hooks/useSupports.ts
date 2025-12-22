@@ -1,6 +1,7 @@
+import type { UseSupportsReturn } from "../index.d.ts";
 import { safeNavigator } from ".";
 
-const useSupports = () => {
+const useSupports = (): UseSupportsReturn => {
   const nav = safeNavigator();
   const supportsCanShare = !!(nav && (nav as any).canShare);
   const supportsWebShare = !!(nav && (nav as any).share);
@@ -9,8 +10,8 @@ const useSupports = () => {
   return {
     supportsWebShare,
     supportsCanShare,
-   supportsClipboard,
-   nav,
+    supportsClipboard,
+    nav,
   };
 };
 export default useSupports;

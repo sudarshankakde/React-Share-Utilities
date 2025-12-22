@@ -1,0 +1,25 @@
+{
+  "name": "react-share-utilities",
+  "version": "0.0.1",
+  "description": "React sharing utilities with clipboard, social share, and deep link support",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+   "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudarshankakde/React-Share-Utilities.git"
+  },
+  "keywords": [
+    "share" , "react" , "utilities", "react-share", "social-share" , "deeplink" , "clipboard", "react-deeplink", "react-clipboard", "react-social-share", "react-share-utilities"
+  ],
+  "author": "Web Dev Simplified",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudarshankakde/React-Share-Utilities/issues"
+  },
+  "homepage": "https://github.com/sudarshankakde/React-Share-Utilities#readme",
+  "peerDependencies": {
+  }
+}

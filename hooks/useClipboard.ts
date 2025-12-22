@@ -1,18 +1,10 @@
 import { useCallback, useRef, useState } from "react";
-import type { ShareInput, UseCopyClipboardOptions } from "../../pakage/types";
+import type { ShareInput, UseClipboardReturn, UseCopyClipboardOptions } from "../index.d.ts";
 import useSupports from "./useSupports";
 import { toShareData } from "./useShare";
 const useClipboard = (
   options: UseCopyClipboardOptions
-): {
-  copyToClipboard: (text: string) => Promise<void>;
-  canShare: (data?: ShareInput) => boolean;
-  isSharedId: string | null;
-  isSharing: boolean;
-  status: "idle" | "sharing" | "success" | "error";
-  error: Error | null;
-  reset: () => void;
-} => {
+): UseClipboardReturn => {
   const { onSuccess, onError } = options || {};
   const [isSharedId, setIsSharedId] = useState<string | null>(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -50,7 +42,6 @@ const useClipboard = (
     textarea.select();
     try {
       document.execCommand("copy");
-
     } finally {
       if (onSuccess) onSuccess();
       setIsSharing(false);

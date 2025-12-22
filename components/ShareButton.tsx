@@ -1,27 +1,11 @@
 import React from "react";
-import type { ShareInput, UseShareOptions } from "../types";
 import ShareFallbackModal from "./fallback";
 import type { ReactNode } from "react";
 import "./Button.css";
-import { ICONS } from "../../src/assets/ShareButton";
+import { ICONS } from "../assets/ShareButton";
 import useShare from "../hooks/useShare";
+import type { Size ,Variant,Color,ShareButtonProps, ShareInput} from "../index.d.ts";
 
-
-type Variant =
-  | "solid"
-  | "outline"
-  | "ghost"
-  | "soft"
-  | "link"
-  | "destructive"
-  | "custom";
-
-type Color =
-  | "primary"
-  | "success"
-  | "danger"
-  | "warning"
-  | "neutral";
 
 // Extract valid icon names from ICONS object
 type DefaultIconName = "share-fill" | "share";
@@ -29,7 +13,6 @@ type SuccessIconName = "success" | "success-check";
 type ErrorIconName = "error" | "error-exclamation";
 type BusyIconName = "busy-loader" | "busy-clock";
 
-type Size = "sm" | "md" | "lg";
 
 const VARIANTS: Record<Variant, string> = {
   solid: "variant-solid",
@@ -55,29 +38,6 @@ const SIZES: Record<Size, string> = {
   lg: "size-lg",
 };
 
-export type ShareButtonProps = {
-  data: ShareInput;
-  id?: string;
-  label?: ReactNode;
-  busyLabel?: ReactNode;
-  successLabel?: ReactNode;
-  className?: string;
-  disabled?: boolean;
-  customLabelIcons?: {
-    default?: DefaultIconName | ReactNode;
-    success?: SuccessIconName | ReactNode;
-    error?: ErrorIconName | ReactNode;
-    busy?: BusyIconName | ReactNode;
-  };
-   variant?: Variant;
-  color?: Color;
-  size?: Size;
-  options?: Omit<UseShareOptions, "onSuccess" | "onError">;
-  onSuccess?: UseShareOptions["onSuccess"];
-  onError?: UseShareOptions["onError"];
-
-  as?: React.ElementType;
-} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick">;
 
 
 function ShareButton({
@@ -105,7 +65,7 @@ function ShareButton({
   ...btnProps
 }: ShareButtonProps) {
   const [showFallback, setShowFallback] = React.useState(false);
-  const [fallbackData, setFallbackData] = React.useState<ShareInput | null>(null);
+  const [fallbackData, setFallbackData] = React.useState<ShareInput| null>(null);
 
   const { share, isSharing, status, reset } = useShare({
     ...(options || {}),

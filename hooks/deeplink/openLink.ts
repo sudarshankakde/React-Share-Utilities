@@ -1,4 +1,4 @@
-import type { OpenLinkOptions } from "../../../pakage/interface";
+import type { OpenLinkOptions } from "../../index.d.ts";
 import { detectOS } from "../helper/detectOS";
 import { generateDeepLink } from "./DeepLink";
 
@@ -46,3 +46,4 @@ function openLink(url: string, options: OpenLinkOptions = {}): void {
 }
 
 export { openLink };
+export default openLink;

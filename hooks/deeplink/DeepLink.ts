@@ -1,5 +1,4 @@
-import type { DeepLinkResult } from "../../../pakage/interface";
-import type { SocialParams, SocialPlatform } from "../../../pakage/types";
+import type { DeepLinkResult, SocialParams, SocialPlatform } from "../../index.d.ts";
 
 /**
  * Generate deep links for native apps

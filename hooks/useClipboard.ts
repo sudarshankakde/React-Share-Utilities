@@ -1,10 +1,12 @@
 import { useCallback, useRef, useState } from "react";
-import type { ShareInput, UseClipboardReturn, UseCopyClipboardOptions } from "../index.d.ts";
+import type {
+  ShareInput,
+  UseClipboardReturn,
+  UseCopyClipboardOptions,
+} from "../index.d.ts";
 import useSupports from "./useSupports";
 import { toShareData } from "./useShare";
-const useClipboard = (
-  options: UseCopyClipboardOptions
-): UseClipboardReturn => {
+const useClipboard = (options: UseCopyClipboardOptions): UseClipboardReturn => {
   const { onSuccess, onError } = options || {};
   const [isSharedId, setIsSharedId] = useState<string | null>(null);
   const [isSharing, setIsSharing] = useState(false);

@@ -13,5 +13,4 @@ function detectPlatform(url: string): DeepLinkPlatform {
   return generateDeepLink(url).platform;
 }
 
-
 export { detectPlatform };

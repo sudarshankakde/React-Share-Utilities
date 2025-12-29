@@ -4,15 +4,19 @@ import type { ReactNode } from "react";
 import "./Button.css";
 import { ICONS } from "../assets/ShareButton";
 import useShare from "../hooks/useShare";
-import type { Size ,Variant,Color,ShareButtonProps, ShareInput} from "../index.d.ts";
-
+import type {
+  Size,
+  Variant,
+  Color,
+  ShareButtonProps,
+  ShareInput,
+} from "../index.d.ts";
 
 // Extract valid icon names from ICONS object
 type DefaultIconName = "share-fill" | "share";
 type SuccessIconName = "success" | "success-check";
 type ErrorIconName = "error" | "error-exclamation";
 type BusyIconName = "busy-loader" | "busy-clock";
-
 
 const VARIANTS: Record<Variant, string> = {
   solid: "variant-solid",
@@ -38,8 +42,6 @@ const SIZES: Record<Size, string> = {
   lg: "size-lg",
 };
 
-
-
 function ShareButton({
   data,
   id,
@@ -50,7 +52,7 @@ function ShareButton({
     default: "share-fill",
     busy: "busy-loader",
     error: "error-exclamation",
-    success:"success",
+    success: "success",
   },
   className,
   disabled,
@@ -61,44 +63,59 @@ function ShareButton({
   variant = "solid",
   size = "md",
   color = "primary",
-  
+
   ...btnProps
 }: ShareButtonProps) {
   const [showFallback, setShowFallback] = React.useState(false);
-  const [fallbackData, setFallbackData] = React.useState<ShareInput| null>(null);
+  const [fallbackData, setFallbackData] = React.useState<ShareInput | null>(
+    null
+  );
 
   const { share, isSharing, status, reset } = useShare({
     ...(options || {}),
     // If consumer didn't specify a fallback, open the social modal
-    fallback: options?.fallback ?? ((d: ShareInput) => {
-      setFallbackData(d);
-      setShowFallback(true);
-    }),
+    fallback:
+      options?.fallback ??
+      ((d: ShareInput) => {
+        setFallbackData(d);
+        setShowFallback(true);
+      }),
     onSuccess,
     onError,
   });
-
 
   const Tag: React.ElementType = as || "button";
   const isSuccess = status === "success" && !showFallback;
   const isBusy = isSharing || status === "sharing" || showFallback;
 
   // Helper to resolve icon name to JSX
-  const resolveIcon = (icon: DefaultIconName | SuccessIconName | ErrorIconName | BusyIconName | ReactNode | undefined): ReactNode => {
+  const resolveIcon = (
+    icon:
+      | DefaultIconName
+      | SuccessIconName
+      | ErrorIconName
+      | BusyIconName
+      | ReactNode
+      | undefined
+  ): ReactNode => {
     if (!icon) return null;
     if (typeof icon !== "string") return icon;
-    
+
     // Resolve string icon names
-    if (icon === "share-fill" || icon === "share") return ICONS.default[icon as DefaultIconName];
-    if (icon === "success" || icon === "success-check") return ICONS.success[icon as SuccessIconName];
-    if (icon === "error" || icon === "error-exclamation") return ICONS.error[icon as ErrorIconName];
-    if (icon === "busy-clock" || icon === "busy-loader") return ICONS.busy[icon as BusyIconName];
+    if (icon === "share-fill" || icon === "share")
+      return ICONS.default[icon as DefaultIconName];
+    if (icon === "success" || icon === "success-check")
+      return ICONS.success[icon as SuccessIconName];
+    if (icon === "error" || icon === "error-exclamation")
+      return ICONS.error[icon as ErrorIconName];
+    if (icon === "busy-clock" || icon === "busy-loader")
+      return ICONS.busy[icon as BusyIconName];
 
     return null;
   };
 
   React.useEffect(() => {
-    if (isSuccess  ) {
+    if (isSuccess) {
       const t = setTimeout(reset, options?.timeout || 3000);
       return () => clearTimeout(t);
     }
@@ -126,7 +143,9 @@ function ShareButton({
           variant !== "custom" && COLORS[color],
           variant !== "custom" && SIZES[size],
           className,
-        ].filter(Boolean).join(" ")}
+        ]
+          .filter(Boolean)
+          .join(" ")}
         disabled={Tag === "button" ? disabled || isBusy : undefined}
         onClick={() => share(data, { id })}
         {...btnProps}
@@ -134,7 +153,7 @@ function ShareButton({
         {customLabelIcons &&
           (isSuccess
             ? resolveIcon(customLabelIcons.success)
-            : isBusy 
+            : isBusy
               ? resolveIcon(customLabelIcons.busy)
               : resolveIcon(customLabelIcons.default))}
 
@@ -144,7 +163,8 @@ function ShareButton({
       </Tag>
       <ShareFallbackModal
         open={showFallback}
-        onClose={() => {setShowFallback(false)
+        onClose={() => {
+          setShowFallback(false);
         }}
         data={fallbackData}
       />
@@ -152,6 +172,4 @@ function ShareButton({
   );
 }
 
-
 export default ShareButton;
-

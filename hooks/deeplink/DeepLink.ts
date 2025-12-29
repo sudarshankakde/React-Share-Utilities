@@ -1,4 +1,8 @@
-import type { DeepLinkResult, SocialParams, SocialPlatform } from "../../index.d.ts";
+import type {
+  DeepLinkResult,
+  SocialParams,
+  SocialPlatform,
+} from "../../index.d.ts";
 
 /**
  * Generate deep links for native apps

@@ -1,13 +1,18 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import type {  SocialParams, SocialPlatform , ShareInput,UseShareOptions, UseShareReturn } from "../index.d.ts";
+import type {
+  SocialParams,
+  SocialPlatform,
+  ShareInput,
+  UseShareOptions,
+  UseShareReturn,
+} from "../index.d.ts";
 import { detectPlatform } from "./helper/detectPlatform";
 import { buildSocialUrl } from "./deeplink/DeepLink";
-import  useClipboard from "./useClipboard";
+import useClipboard from "./useClipboard";
 import useSupports from "./useSupports";
 import { detectOS } from "./helper/detectOS";
 
-
-// Build ShareData object from ShareInput type 
+// Build ShareData object from ShareInput type
 export function toShareData(input: ShareInput): ShareData {
   if (!input) return {} as ShareData;
   if (
@@ -27,10 +32,6 @@ export function toShareData(input: ShareInput): ShareData {
   return input as ShareData;
 }
 
-
-
-
-
 // use share is used to share content via Web Share API or fallback methods
 function useShare(options: UseShareOptions = {}): UseShareReturn {
   const {
@@ -43,11 +44,12 @@ function useShare(options: UseShareOptions = {}): UseShareReturn {
     messages,
   } = options;
 
-  const { copyToClipboard , canShare  } = useClipboard(
-    { onSuccess : () => {}
-      , onError: () => {} }
-  );
-  const { supportsWebShare, supportsCanShare, supportsClipboard , nav } = useSupports();
+  const { copyToClipboard, canShare } = useClipboard({
+    onSuccess: () => {},
+    onError: () => {},
+  });
+  const { supportsWebShare, supportsCanShare, supportsClipboard, nav } =
+    useSupports();
   const [isSharedId, setIsSharedId] = useState<string | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [isSharing, setIsSharing] = useState(false);
@@ -67,10 +69,6 @@ function useShare(options: UseShareOptions = {}): UseShareReturn {
       timerRef.current = null;
     }
   }, []);
-
- 
-
-  
 
   const socialUrl = useCallback(
     (platform: SocialPlatform, params: SocialParams) => {
@@ -120,10 +118,10 @@ function useShare(options: UseShareOptions = {}): UseShareReturn {
             method === "fallback"
               ? typeof messages?.fallbackCopied === "function"
                 ? messages!.fallbackCopied!(shareData)
-                : messages?.fallbackCopied ?? "Copied to clipboard"
+                : (messages?.fallbackCopied ?? "Copied to clipboard")
               : typeof messages?.success === "function"
-              ? messages!.success!({ method, data: shareData })
-              : messages?.success ?? "Shared successfully";
+                ? messages!.success!({ method, data: shareData })
+                : (messages?.success ?? "Shared successfully");
           toast.success(msg);
         }
       };
@@ -138,9 +136,10 @@ function useShare(options: UseShareOptions = {}): UseShareReturn {
         // Fallback path
         if (fallback === "clipboard") {
           copyToClipboard(
-            shareData.text || 
+            shareData.text ||
               shareData.url ||
-              `${shareData.text ? shareData.text + "\n" : ""
+              `${
+                shareData.text ? shareData.text + "\n" : ""
               }${shareData.url ? shareData.url : ""}`
           );
           finish(true, "fallback");
@@ -192,17 +191,13 @@ function useShare(options: UseShareOptions = {}): UseShareReturn {
     [share]
   );
 
-  const support = useMemo(
-    () => {
-      return {
+  const support = useMemo(() => {
+    return {
       webShare: supportsWebShare,
       canShare: supportsCanShare,
       clipboard: supportsClipboard,
-    }},
-    [supportsWebShare, supportsCanShare, supportsClipboard]
-  );
-
-
+    };
+  }, [supportsWebShare, supportsCanShare, supportsClipboard]);
 
   return {
     // Core
@@ -220,7 +215,6 @@ function useShare(options: UseShareOptions = {}): UseShareReturn {
     // Deep linking
     detectPlatform,
     detectOS,
- 
 
     // State
     isSharedId,
@@ -230,6 +224,5 @@ function useShare(options: UseShareOptions = {}): UseShareReturn {
     error,
   };
 }
-
 
 export default useShare;

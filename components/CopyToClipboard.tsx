@@ -1,15 +1,15 @@
 /**
  * CopyToClipboard Component
- * 
+ *
  * A button component that copies content to clipboard with status feedback.
- * 
+ *
  * Key Features:
  * - Automatic clipboard fallback (never uses native share API)
  * - Reuses ShareButton styling and structure
  * - Icon state transitions (default → busy → success/error)
  * - Custom className support with full CSS override capability
  * - Supports custom variant="custom" for zero preset styles
- * 
+ *
  * Important API Limitations:
  * - LinkedIn Share API: Only accepts `url` parameter. title/text/files are ignored
  * - Twitter/X: Supports url, text, via, hashtags. Files not supported
@@ -17,23 +17,23 @@
  * - WhatsApp/Telegram: Support url and text only
  * - Email: Supports subject (title) and body (text) but not files
  * - Web Share API: Requires HTTPS and user gesture. Clipboard is the fallback
- * 
+ *
  * Usage:
  * ```tsx
  * import CopyToClipboard from './components/CopyToClipboard';
- * 
+ *
  * // Simple usage
  * <CopyToClipboard data="Copy me!" />
- * 
+ *
  * // With custom styling
- * <CopyToClipboard 
+ * <CopyToClipboard
  *   data="https://example.com"
  *   variant="custom"
  *   className="px-4 py-2 bg-blue-500 text-white rounded"
  * />
- * 
+ *
  * // With custom icons
- * <CopyToClipboard 
+ * <CopyToClipboard
  *   data="Hello World"
  *   customLabelIcons={{
  *     default: "share-fill",
@@ -51,7 +51,7 @@ import type { ReactNode } from "react";
 import "./Button.css";
 import { ICONS } from "../assets/CopyToClipboard";
 import useClipboard from "../hooks/useClipboard";
-import type { Variant, Size,Color, CopyToClipboardProps} from "../index.d.ts";
+import type { Variant, Size, Color, CopyToClipboardProps } from "../index.d.ts";
 
 type ShareIconName = "share-fill" | "share" | "copy";
 type SuccessIconName = "success";
@@ -59,27 +59,27 @@ type ErrorIconName = "error";
 type BusyIconName = "busy-clock" | "busy-loader";
 
 const VARIANTS: Record<Variant, string> = {
-	solid: "variant-solid",
-	outline: "variant-outline",
-	ghost: "variant-ghost",
-	soft: "variant-soft",
-	link: "variant-link",
-	destructive: "variant-destructive",
-	custom: "variant-custom",
+  solid: "variant-solid",
+  outline: "variant-outline",
+  ghost: "variant-ghost",
+  soft: "variant-soft",
+  link: "variant-link",
+  destructive: "variant-destructive",
+  custom: "variant-custom",
 };
 
 const COLORS: Record<Color, string> = {
-	primary: "color-primary",
-	success: "color-success",
-	danger: "color-danger",
-	warning: "color-warning",
-	neutral: "color-neutral",
+  primary: "color-primary",
+  success: "color-success",
+  danger: "color-danger",
+  warning: "color-warning",
+  neutral: "color-neutral",
 };
 
 const SIZES: Record<Size, string> = {
-	sm: "size-sm",
-	md: "size-md",
-	lg: "size-lg",
+  sm: "size-sm",
+  md: "size-md",
+  lg: "size-lg",
 };
 
 const defaultCustomLabelIcons = {
@@ -91,126 +91,146 @@ const defaultCustomLabelIcons = {
 
 function CopyToClipboard({
   showLabel = true,
-	data,
-	
-	label = "Copy",
-	busyLabel = "Copying…",
-	successLabel = "Copied",
-	customLabelIcons = defaultCustomLabelIcons,
-	className,
-	disabled,
-	options,
-	onSuccess,
-	onError,
-	as,
-	variant = "solid",
-	size = "md",
-	color = "primary",
-	...btnProps
+  data,
+
+  label = "Copy",
+  busyLabel = "Copying…",
+  successLabel = "Copied",
+  customLabelIcons = defaultCustomLabelIcons,
+  className,
+  disabled,
+  options,
+  onSuccess,
+  onError,
+  as,
+  variant = "solid",
+  size = "md",
+  color = "primary",
+  ...btnProps
 }: CopyToClipboardProps) {
-	// Force clipboard-only behavior (no native Web Share API)
-	// This ensures consistent copy-to-clipboard experience across all browsers
-  
-  const {copyToClipboard ,reset, isSharing, status} = useClipboard({ 
+  // Force clipboard-only behavior (no native Web Share API)
+  // This ensures consistent copy-to-clipboard experience across all browsers
+
+  const { copyToClipboard, reset, isSharing, status } = useClipboard({
     ...(options || {}),
-    onSuccess:()=>{
-      if(onSuccess){
+    onSuccess: () => {
+      if (onSuccess) {
         onSuccess();
-      }else if(options && options.onSuccess ){
+      } else if (options && options.onSuccess) {
         options.onSuccess();
       }
     },
-    onError: (err)=>{
-      if(onError){
+    onError: (err) => {
+      if (onError) {
         onError(err);
-      }
-      else if(options && options.onError ){
+      } else if (options && options.onError) {
         options.onError(err);
       }
+    },
+  });
+
+  const Tag: React.ElementType = as || "button";
+  const isSuccess = status === "success";
+  const isBusy = isSharing || status === "sharing";
+
+  /**
+   * Resolves icon name strings to their JSX components.
+   * Available icon names: "share-fill", "share", "success", "error", "busy-clock", "busy-loader"
+   * Also accepts custom ReactNode elements.
+   */
+  const resolveIcon = (
+    icon:
+      | ShareIconName
+      | SuccessIconName
+      | ErrorIconName
+      | BusyIconName
+      | ReactNode
+      | undefined
+  ): ReactNode => {
+    if (!icon) return null;
+    if (typeof icon !== "string") return icon;
+    if (icon === "share-fill" || icon === "share" || icon === "copy")
+      return ICONS.default[icon];
+    if (icon === "success") return ICONS.success[icon];
+    if (icon === "error") return ICONS.error[icon];
+    if (icon === "busy-clock" || icon === "busy-loader")
+      return ICONS.busy[icon];
+    return null;
+  };
+
+  React.useEffect(() => {
+    if (isSuccess) {
+      const t = setTimeout(reset, options?.timeout || 3000);
+      return () => clearTimeout(t);
     }
-  }, );
+  }, [isSuccess, options?.timeout, reset]);
 
-	const Tag: React.ElementType = as || "button";
-	const isSuccess = status === "success";
-	const isBusy = isSharing || status === "sharing";
+  const ariaLabel =
+    typeof label === "string"
+      ? label
+      : isBusy
+        ? "Copying content"
+        : "Copy content";
 
-	/**
-	 * Resolves icon name strings to their JSX components.
-	 * Available icon names: "share-fill", "share", "success", "error", "busy-clock", "busy-loader"
-	 * Also accepts custom ReactNode elements.
-	 */
-	const resolveIcon = (
-		icon: ShareIconName | SuccessIconName | ErrorIconName | BusyIconName | ReactNode | undefined
-	): ReactNode => {
-		if (!icon) return null;
-		if (typeof icon !== "string") return icon;
-		if (icon === "share-fill" || icon === "share" || icon === "copy") return ICONS.default[icon];
-		if (icon === "success") return ICONS.success[icon];
-		if (icon === "error") return ICONS.error[icon];
-		if (icon === "busy-clock" || icon === "busy-loader") return ICONS.busy[icon];
-		return null;
-	};
-
-	React.useEffect(() => {
-		if (isSuccess ) {
-			const t = setTimeout(reset, options?.timeout || 3000);
-			return () => clearTimeout(t);
-		}
-	}, [isSuccess, options?.timeout, reset]);
-
-	const ariaLabel =
-		typeof label === "string"
-			? label
-			: isBusy
-			? "Copying content"
-			: "Copy content";
-
-	/**
-	 * Handles copy action. Uses the share() function with forced clipboard fallback
-	 * to leverage built-in status management, toast notifications, and callbacks.
-	 */
-	const handleCopy = () => {
+  /**
+   * Handles copy action. Uses the share() function with forced clipboard fallback
+   * to leverage built-in status management, toast notifications, and callbacks.
+   */
+  const handleCopy = () => {
     console.log("copying", data);
-		return copyToClipboard(data);
-	};
+    return copyToClipboard(data);
+  };
   useEffect(() => {
     console.log("isSharing", isSharing, status);
   }, [isSharing, status]);
 
-	return (
-		<Tag
-			type={Tag === "button" ? "button" : undefined}
-			role={Tag !== "button" ? "button" : undefined}
-			aria-label={ariaLabel}
-			aria-busy={isBusy}
-			aria-disabled={disabled || isBusy}
-			tabIndex={disabled ? -1 : 0}
-			className={[
-				"Share-React-Button",
-				variant !== "custom" && VARIANTS[variant],
-				variant !== "custom" && COLORS[color],
-				variant !== "custom" && SIZES[size],
-				className,
-			]
-				.filter(Boolean)
-				.join(" ")}
-			disabled={Tag === "button" ? disabled || isBusy : undefined}
-			onClick={handleCopy}
-			{...btnProps}
-		>
-			{customLabelIcons &&
-				(isSuccess
-					? resolveIcon(customLabelIcons.success ? customLabelIcons.success : defaultCustomLabelIcons.success)
-					: isBusy
-					? resolveIcon(customLabelIcons.busy ? customLabelIcons.busy : defaultCustomLabelIcons.busy)
-					: resolveIcon(customLabelIcons.default ? customLabelIcons.default : defaultCustomLabelIcons.default))}
+  return (
+    <Tag
+      type={Tag === "button" ? "button" : undefined}
+      role={Tag !== "button" ? "button" : undefined}
+      aria-label={ariaLabel}
+      aria-busy={isBusy}
+      aria-disabled={disabled || isBusy}
+      tabIndex={disabled ? -1 : 0}
+      className={[
+        "Share-React-Button",
+        variant !== "custom" && VARIANTS[variant],
+        variant !== "custom" && COLORS[color],
+        variant !== "custom" && SIZES[size],
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      disabled={Tag === "button" ? disabled || isBusy : undefined}
+      onClick={handleCopy}
+      {...btnProps}
+    >
+      {customLabelIcons &&
+        (isSuccess
+          ? resolveIcon(
+              customLabelIcons.success
+                ? customLabelIcons.success
+                : defaultCustomLabelIcons.success
+            )
+          : isBusy
+            ? resolveIcon(
+                customLabelIcons.busy
+                  ? customLabelIcons.busy
+                  : defaultCustomLabelIcons.busy
+              )
+            : resolveIcon(
+                customLabelIcons.default
+                  ? customLabelIcons.default
+                  : defaultCustomLabelIcons.default
+              ))}
 
-      {showLabel &&<span aria-live="polite">
-				{isSuccess ? successLabel : isBusy ? busyLabel : label}
-			</span> }
-			
-		</Tag>
-	);
+      {showLabel && (
+        <span aria-live="polite">
+          {isSuccess ? successLabel : isBusy ? busyLabel : label}
+        </span>
+      )}
+    </Tag>
+  );
 }
 
 export default CopyToClipboard;

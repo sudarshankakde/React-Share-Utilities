@@ -2,7 +2,6 @@ import type { OpenLinkOptions } from "../../index.d.ts";
 import { detectOS } from "../helper/detectOS";
 import { generateDeepLink } from "./DeepLink";
 
-
 function openLink(url: string, options: OpenLinkOptions = {}): void {
   const {
     fallbackToWeb = true,

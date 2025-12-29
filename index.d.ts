@@ -129,10 +129,18 @@ export interface OpenLinkOptions {
 // HOOK RETURN TYPES
 // ============================================
 export interface UseShareReturn {
-  share: (data: ShareInput, opts?: { id?: string }) => Promise<{ ok: boolean; method: "native" | "fallback"; error?: Error }>;
-  handleShare: (url: string, title?: string, text?: string, id?: string) => Promise<{ ok: boolean; method: "native" | "fallback"; error?: Error }>;
+  share: (
+    data: ShareInput,
+    opts?: { id?: string }
+  ) => Promise<{ ok: boolean; method: "native" | "fallback"; error?: Error }>;
+  handleShare: (
+    url: string,
+    title?: string,
+    text?: string,
+    id?: string
+  ) => Promise<{ ok: boolean; method: "native" | "fallback"; error?: Error }>;
   copyToClipboard: (text: string) => Promise<void>;
-  
+
   canShare: (data?: ShareInput) => boolean;
   support: {
     webShare: boolean;
@@ -196,8 +204,10 @@ export type Variant =
 export type Color = "primary" | "success" | "danger" | "warning" | "neutral";
 export type Size = "sm" | "md" | "lg";
 
-export interface CopyToClipboardProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
+export interface CopyToClipboardProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "onClick"
+> {
   data: string;
   id?: string;
   label?: ReactNode;
@@ -221,8 +231,10 @@ export interface CopyToClipboardProps
   showLabel?: boolean;
 }
 
-export interface ShareButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
+export interface ShareButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "onClick"
+> {
   data: ShareInput;
   id?: string;
   label?: ReactNode;
@@ -245,8 +257,10 @@ export interface ShareButtonProps
   as?: ElementType;
 }
 
-export interface SocialShareButtonProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
+export interface SocialShareButtonProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "onClick"
+> {
   platform: SocialPlatform;
   params: SocialParams;
   openSocialShare?: (
@@ -268,8 +282,10 @@ export interface SocialShareButtonProps
   showLabel?: boolean;
 }
 
-export interface DeepLinkOpenProps
-  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
+export interface DeepLinkOpenProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  "onClick"
+> {
   url: string;
   label?: ReactNode;
   variant?: Variant;

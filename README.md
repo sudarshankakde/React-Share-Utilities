@@ -10,8 +10,10 @@ Lightweight React helpers for sharing content, copying to clipboard, and opening
 ```bash
 npm install react-share-utilities
 ```
-OR 
-```bash 
+
+OR
+
+```bash
 yarn add react-share-utilities
 ```
 
@@ -20,7 +22,7 @@ yarn add react-share-utilities
 ## Quick Start
 
 ```tsx
-import { useShare } from 'react-share-utilities';
+import { useShare } from "react-share-utilities";
 
 export default function Example() {
   const { share, isSharing, status, error } = useShare();
@@ -28,13 +30,15 @@ export default function Example() {
   return (
     <button
       disabled={isSharing}
-      onClick={() => share({
-        url: 'https://example.com',
-        title: 'Hello world',
-        text: 'Check this out!',
-      })}
+      onClick={() =>
+        share({
+          url: "https://example.com",
+          title: "Hello world",
+          text: "Check this out!",
+        })
+      }
     >
-      {status === 'sharing' ? 'Sharing…' : 'Share'}
+      {status === "sharing" ? "Sharing…" : "Share"}
     </button>
   );
 }
@@ -43,82 +47,89 @@ export default function Example() {
 ## Components
 
 ### ShareButton
+
 Simplest way to trigger native share with fallback.
 
 ```tsx
-import { ShareButton } from 'react-share-utilities';
+import { ShareButton } from "react-share-utilities";
 
 <ShareButton
-  data={{ url: 'https://example.com', title: 'Hello', text: 'Check this out' }}
+  data={{ url: "https://example.com", title: "Hello", text: "Check this out" }}
   variant="solid"
   color="primary"
-  onSuccess={(info) => console.log('shared via', info.method)}
-/>
+  onSuccess={(info) => console.log("shared via", info.method)}
+/>;
 ```
 
 ### CopyToClipboard
 
 ```tsx
-import { CopyToClipboard } from 'react-share-utilities';
+import { CopyToClipboard } from "react-share-utilities";
 
 <CopyToClipboard
   data="https://example.com"
   label="Copy link"
   successLabel="Copied!"
   variant="outline"
-/>
+/>;
 ```
 
 ### SocialShareButton
+
 Generate and open platform URLs (X, Facebook, LinkedIn, Reddit, WhatsApp, Telegram, Email, etc.).
 
 ```tsx
-import { SocialShareButton } from 'react-share-utilities';
+import { SocialShareButton } from "react-share-utilities";
 
 <SocialShareButton
   platform="twitter"
   params={{
-    url: 'https://example.com',
-    title: 'A great article',
-    via: 'yourhandle',
-    hashtags: ['react', 'sharing'],
+    url: "https://example.com",
+    title: "A great article",
+    via: "yourhandle",
+    hashtags: ["react", "sharing"],
   }}
   label="Share on X"
-/>
+/>;
 ```
 
 ### DeepLinkOpen
+
 Open native apps with graceful web fallback.
 
 ```tsx
-import { DeepLinkOpen } from 'react-share-utilities';
+import { DeepLinkOpen } from "react-share-utilities";
 
 <DeepLinkOpen
   url="https://open.spotify.com/playlist/123"
   label="Open in Spotify"
   options={{ fallbackToWeb: true, fallbackDelay: 2000 }}
-  onOpened={({ deepLink, os }) => console.log('opened for', os, deepLink)}
-/>
+  onOpened={({ deepLink, os }) => console.log("opened for", os, deepLink)}
+/>;
 ```
 
 ### ShareFallbackModal
+
 UI modal you can show when native sharing is unavailable. (Import and render when `method === 'fallback'` from `useShare`.)
 
 ```tsx
-import { ShareFallbackModal } from 'react-share-utilities';
+import { ShareFallbackModal } from "react-share-utilities";
 ```
 
 ## Hooks
 
 ### useShare(options)
+
 - Native `navigator.share` when available; falls back to clipboard or custom function.
 - Returns helpers: `share`, `handleShare`, `copyToClipboard`, `openSocialShare`, `socialUrl`, `detectPlatform`, `detectOS`, plus status flags.
 - Options: `timeout`, `preferNative`, `fallback` ("clipboard" | "none" | custom fn), `toast` handlers, `messages`, `onSuccess`, `onError`.
 
 ### useClipboard(options)
+
 - `copyToClipboard(text)` with status flags and optional fallback.
 
 ### useSupports()
+
 - Feature detection for `navigator.share`, `navigator.canShare`, and clipboard.
 
 ## Utilities
@@ -130,13 +141,17 @@ import { ShareFallbackModal } from 'react-share-utilities';
 - `safeNavigator()` – guard for SSR/unsupported envs.
 
 ## Props & Types
+
 Key types are exported: `ShareInput`, `UseShareOptions`, `UseClipboardReturn`, `UseShareReturn`, `SocialPlatform`, `SocialParams`, `DeepLinkPlatform`, `OpenLinkOptions`, `Variant`, `Color`, `Size`, and icon maps `ICONS`, `LOGOS`, `SHARE_BUTTON_ICONS`, `COPY_TO_CLIPBOARD_ICONS`.
 
 ## Styling
+
 Components ship with minimal inline styles; you can style via `className`, `variant`, `color`, and `size`. Icon sets are exported if you want to build custom buttons.
 
 ## Examples & Docs
+
 Full docs, live demos, and more recipes: https://react-share.sudarshankakde.tech/
 
 ## License
+
 ISC

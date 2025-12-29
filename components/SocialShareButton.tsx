@@ -1,12 +1,14 @@
-
 import React from "react";
 import type { ReactNode } from "react";
-import type { Variant,Size,Color,SocialShareButtonProps, SocialPlatform } from "../index.d.ts";
+import type {
+  Variant,
+  Size,
+  Color,
+  SocialShareButtonProps,
+  SocialPlatform,
+} from "../index.d.ts";
 import "./Button.css";
 import { ICONS } from "../assets";
-
-
-
 
 const VARIANTS: Record<Variant, string> = {
   solid: "variant-solid",
@@ -35,17 +37,56 @@ const SIZES: Record<Size, string> = {
 /**
  * Platform-specific info and defaults
  */
-const PLATFORM_INFO: Record<SocialPlatform, { label: string; color: Color; icon: string | ReactNode }> = {
-  linkedin: { label: "LinkedIn", color: "primary", icon: ICONS.linkedin || "bi-linkedin" },
-  twitter: { label: "Twitter/X", color: "primary", icon: ICONS.twitter || "bi-twitter" },
+const PLATFORM_INFO: Record<
+  SocialPlatform,
+  { label: string; color: Color; icon: string | ReactNode }
+> = {
+  linkedin: {
+    label: "LinkedIn",
+    color: "primary",
+    icon: ICONS.linkedin || "bi-linkedin",
+  },
+  twitter: {
+    label: "Twitter/X",
+    color: "primary",
+    icon: ICONS.twitter || "bi-twitter",
+  },
   x: { label: "X", color: "neutral", icon: ICONS.x || "bi-x" },
-  facebook: { label: "Facebook", color: "primary", icon: ICONS.facebook || "bi-facebook" },
-  reddit: { label: "Reddit", color: "danger", icon: ICONS.reddit || "bi-reddit" },
-  whatsapp: { label: "WhatsApp", color: "success", icon: ICONS.whatsapp || "bi-whatsapp" },
-  telegram: { label: "Telegram", color: "primary", icon: ICONS.telegram || "bi-telegram" },
-  email: { label: "Email", color: "warning", icon: ICONS.email || "bi-envelope" },
-  instagram: { label: "Instagram", color: "danger", icon: ICONS.instagram || "bi-instagram" },
-  snapchat: { label: "Snapchat", color: "warning", icon: ICONS.snapchat || "bi-snapchat" },
+  facebook: {
+    label: "Facebook",
+    color: "primary",
+    icon: ICONS.facebook || "bi-facebook",
+  },
+  reddit: {
+    label: "Reddit",
+    color: "danger",
+    icon: ICONS.reddit || "bi-reddit",
+  },
+  whatsapp: {
+    label: "WhatsApp",
+    color: "success",
+    icon: ICONS.whatsapp || "bi-whatsapp",
+  },
+  telegram: {
+    label: "Telegram",
+    color: "primary",
+    icon: ICONS.telegram || "bi-telegram",
+  },
+  email: {
+    label: "Email",
+    color: "warning",
+    icon: ICONS.email || "bi-envelope",
+  },
+  instagram: {
+    label: "Instagram",
+    color: "danger",
+    icon: ICONS.instagram || "bi-instagram",
+  },
+  snapchat: {
+    label: "Snapchat",
+    color: "warning",
+    icon: ICONS.snapchat || "bi-snapchat",
+  },
 };
 
 /**
@@ -76,8 +117,12 @@ function SocialShareButton({
   target = "_blank",
   ...btnProps
 }: SocialShareButtonProps) {
-  const platformInfo = PLATFORM_INFO[platform] || { label: platform, color: "primary", icon: "bi-share" };
- 
+  const platformInfo = PLATFORM_INFO[platform] || {
+    label: platform,
+    color: "primary",
+    icon: "bi-share",
+  };
+
   const finalLabel = label || platformInfo.label;
   const finalColor = color || platformInfo.color;
   const Tag: React.ElementType = as || "button";
@@ -97,7 +142,9 @@ function SocialShareButton({
     <Tag
       type={Tag === "button" ? "button" : undefined}
       role={Tag !== "button" ? "button" : undefined}
-      aria-label={typeof finalLabel === "string" ? finalLabel : `Share on ${platform}`}
+      aria-label={
+        typeof finalLabel === "string" ? finalLabel : `Share on ${platform}`
+      }
       tabIndex={disabled ? -1 : 0}
       className={[
         "Share-React-Button",
@@ -117,8 +164,7 @@ function SocialShareButton({
       ) : (
         platformInfo.icon
       )}
-      {showLabel &&  <span >{finalLabel}</span>}
-     
+      {showLabel && <span>{finalLabel}</span>}
     </Tag>
   );
 }

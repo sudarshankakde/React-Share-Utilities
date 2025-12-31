@@ -139,12 +139,10 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release v${{ steps.tag_name.outputs.current_version }}
+          name: Release v${{ steps.tag_name.outputs.current_version }}
           body: |
             # Release v${{ steps.tag_name.outputs.current_version }}
 
@@ -161,20 +159,22 @@ jobs:
 
             **npm:**
             ```bash
-            npm install react-share-utilities
+            npm install react-share-utilities@${{ steps.tag_name.outputs.current_version }}
             ```
 
             **yarn:**
             ```bash
-            yarn add react-share-utilities
+            yarn add react-share-utilities@${{ steps.tag_name.outputs.current_version }}
             ```
 
             **pnpm:**
             ```bash
-            pnpm add react-share-utilities
+            pnpm add react-share-utilities@${{ steps.tag_name.outputs.current_version }}
             ```
 
             ---
             For more information, visit the [documentation](https://react-share.sudarshankakde.tech/)
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

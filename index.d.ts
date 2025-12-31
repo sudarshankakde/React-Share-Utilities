@@ -1,5 +1,4 @@
 import type { ReactNode, FC, ButtonHTMLAttributes, ElementType } from "react";
-i;
 // ============================================
 // TYPES
 // ============================================

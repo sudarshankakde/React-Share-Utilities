@@ -1,0 +1,51 @@
+# Development files
+.github/
+.husky/
+.vscode/
+.idea/
+
+# Config files
+.eslintrc.json
+.eslintignore
+.prettierrc
+.prettierignore
+tsconfig.json
+.editorconfig
+
+# Git files
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (keep README.md)
+RELEASE.md
+
+# Lock files (npm will generate its own)
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Test files
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
+test/
+tests/
+coverage/
+
+# Build artifacts (if you add build step)
+*.tsbuildinfo
+.cache/
+
+# Misc
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+tmp/
+temp/

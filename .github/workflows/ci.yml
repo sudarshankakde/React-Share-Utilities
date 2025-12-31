@@ -1,0 +1,99 @@
+name: CI/Testing
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+        package-manager: [npm, yarn]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Enable Yarn
+        if: matrix.package-manager == 'yarn'
+        run: corepack enable
+
+      - name: Cache npm dependencies
+        if: matrix.package-manager == 'npm'
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ matrix.node-version }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-${{ matrix.node-version }}-
+
+      - name: Cache Yarn dependencies
+        if: matrix.package-manager == 'yarn'
+        uses: actions/cache@v3
+        with:
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-${{ matrix.node-version }}-
+
+      - name: Install dependencies with npm
+        if: matrix.package-manager == 'npm'
+        run: npm ci
+
+      - name: Install dependencies with Yarn
+        if: matrix.package-manager == 'yarn'
+        run: yarn install --frozen-lockfile
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build package
+        run: npm run build --if-present
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate all checks
+        run: npm run validate

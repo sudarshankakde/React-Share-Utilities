@@ -3,23 +3,165 @@ name: Publish Package
 on:
   push:
     tags:
-      - 'v*'
+      - 'v*.*.*'
 
 permissions:
-  id-token: write  # Required for OIDC
-  contents: read
+  id-token: write
+  contents: write
+  packages: write
 
 jobs:
-  publish:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run type-check
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Run tests
+        run: npm test
+
+  publish-npm:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
-      - run: npm publish
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build --if-present
+
+      - name: Publish to npm
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-github:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build --if-present
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create-release:
+    needs: [publish-npm, publish-github]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: tag_name
+        run: |
+          echo "current_version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          VERSION="${{ steps.tag_name.outputs.current_version }}"
+          CHANGELOG=$(git log --oneline --no-decorate $(git describe --tags --abbrev=0 HEAD^)..HEAD || git log --oneline --no-decorate -10)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release v${{ steps.tag_name.outputs.current_version }}
+          body: |
+            # Release v${{ steps.tag_name.outputs.current_version }}
+
+            ## 📦 Published to:
+            - [NPM Registry](https://www.npmjs.com/package/react-share-utilities)
+            - [GitHub Packages](https://github.com/sudarshankakde/React-Share-Utilities/packages)
+
+            ## 📝 Changes:
+            ```
+            ${{ steps.changelog.outputs.changelog }}
+            ```
+
+            ### Installation
+
+            **npm:**
+            ```bash
+            npm install react-share-utilities
+            ```
+
+            **yarn:**
+            ```bash
+            yarn add react-share-utilities
+            ```
+
+            **pnpm:**
+            ```bash
+            pnpm add react-share-utilities
+            ```
+
+            ---
+            For more information, visit the [documentation](https://react-share.sudarshankakde.tech/)
+          draft: false
+          prerelease: false

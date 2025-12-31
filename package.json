@@ -41,8 +41,8 @@
     "react-social-share",
     "react-share-utilities"
   ],
-  "author": "Web Dev Simplified",
-  "license": "ISC",
+  "author": "Sudarshan Kakde",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sudarshankakde/React-Share-Utilities/issues"
   },

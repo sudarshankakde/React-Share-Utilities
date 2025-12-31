@@ -11,10 +11,14 @@ Lightweight React helpers for sharing content, copying to clipboard, and opening
 npm install react-share-utilities
 ```
 
-OR
-
+**Or using yarn:**
 ```bash
 yarn add react-share-utilities
+```
+
+**Or using pnpm:**
+```bash
+pnpm add react-share-utilities
 ```
 
 > Works with React 18+ and 19+. Browser-only (uses `navigator`).
@@ -154,4 +158,4 @@ Full docs, live demos, and more recipes: https://react-share.sudarshankakde.tech
 
 ## License
 
-ISC
+This project is licensed under the [MIT License](https://github.com/sudarshankakde/React-Share-Utilities/blob/main/LICENSE).

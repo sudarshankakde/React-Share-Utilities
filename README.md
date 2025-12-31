@@ -12,11 +12,13 @@ npm install react-share-utilities
 ```
 
 **Or using yarn:**
+
 ```bash
 yarn add react-share-utilities
 ```
 
 **Or using pnpm:**
+
 ```bash
 pnpm add react-share-utilities
 ```

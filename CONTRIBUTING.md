@@ -23,22 +23,26 @@ Please be respectful and professional in all interactions. We are committed to p
 ### Local Development Setup
 
 1. **Fork the repository**
+
    ```bash
    # Visit https://github.com/sudarshankakde/React-Share-Utilities and click "Fork"
    ```
 
 2. **Clone your fork**
+
    ```bash
    git clone https://github.com/YOUR-USERNAME/React-Share-Utilities.git
    cd React-Share-Utilities
    ```
 
 3. **Add upstream remote**
+
    ```bash
    git remote add upstream https://github.com/sudarshankakde/React-Share-Utilities.git
    ```
 
 4. **Install dependencies**
+
    ```bash
    # Using npm
    npm install
@@ -82,6 +86,7 @@ When reporting a bug, please include:
 ### Making Changes
 
 1. **Create a feature branch** (if you haven't already)
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -95,6 +100,7 @@ When reporting a bug, please include:
 3. **Follow coding standards** (see below)
 
 4. **Test your changes**
+
    ```bash
    npm run type-check
    ```
@@ -147,7 +153,7 @@ interface ShareOptions {
  */
 export async function shareContent(options: ShareOptions): Promise<void> {
   if (!navigator.share) {
-    throw new Error('Web Share API not supported');
+    throw new Error("Web Share API not supported");
   }
 
   await navigator.share(options);
@@ -200,12 +206,14 @@ npm run test
 ## Pull Request Process
 
 1. **Update your branch** with the latest upstream changes
+
    ```bash
    git fetch upstream
    git rebase upstream/main
    ```
 
 2. **Push your changes**
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -216,24 +224,30 @@ npm run test
    - Select your branch and provide a clear description
 
 4. **PR Description Template**
+
    ```markdown
    ## Description
+
    Brief description of changes
 
    ## Type of Change
+
    - [ ] Bug fix
    - [ ] New feature
    - [ ] Documentation update
    - [ ] Performance improvement
 
    ## Changes Made
+
    - Change 1
    - Change 2
 
    ## Testing
+
    Describe how you tested your changes
 
    ## Checklist
+
    - [ ] Code follows project style guidelines
    - [ ] Self-review completed
    - [ ] Comments added for complex logic
@@ -258,24 +272,27 @@ npm run test
 
 ### Example JSDoc
 
-```typescript
+````typescript
 /**
  * Copy text to the clipboard
  * @param text - The text to copy
  * @param options - Optional configuration
  * @returns Promise that resolves when copy is complete
  * @throws Error if copy operation fails
- * 
+ *
  * @example
  * ```tsx
  * const { copy } = useClipboard();
  * await copy('Hello World');
  * ```
  */
-export async function useClipboard(text: string, options?: ClipboardOptions): Promise<void> {
+export async function useClipboard(
+  text: string,
+  options?: ClipboardOptions
+): Promise<void> {
   // Implementation
 }
-```
+````
 
 ## Performance Considerations
 
@@ -336,7 +353,7 @@ Thank you for contributing! Your efforts help make React Share Utilities better 
 
 ## Maintainers
 
-- **Sudarshan Kakde** - [@sudarshankakde](https://github.com/sudarshankakde) - *Creator & Maintainer*
+- **Sudarshan Kakde** - [@sudarshankakde](https://github.com/sudarshankakde) - _Creator & Maintainer_
 
 For questions or discussions, feel free to reach out to the maintainers through GitHub issues or discussions.
 

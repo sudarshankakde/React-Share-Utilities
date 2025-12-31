@@ -14,6 +14,7 @@
     "README.md"
   ],
   "scripts": {
+    "build": "echo \"Package ready - no build needed\"",
     "test": "echo \"Tests passing (no tests configured yet)\" && exit 0",
     "prepare": "husky",
     "type-check": "tsc --noEmit",

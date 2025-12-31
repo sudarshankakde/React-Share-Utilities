@@ -72,12 +72,12 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build package
-        run: yarn build --if-present || true
+        run: yarn build || true
 
       - name: Publish to npm
-        run: yarn npm publish
+        run: npm publish
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-github:
     needs: validate
@@ -104,17 +104,19 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build package
-        run: yarn build --if-present || true
+        run: yarn build || true
 
-      - name: Configure Yarn for GitHub Packages
+      - name: Configure npm for GitHub Packages
         run: |
-          yarn config set npmRegistryServer https://npm.pkg.github.com
-          yarn config set npmAlwaysAuth true
+          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
+          echo "@sudarshankakde:registry=https://npm.pkg.github.com" >> ~/.npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to GitHub Packages
-        run: yarn npm publish
+        run: npm publish
         env:
-          YARN_NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create-release:
     needs: [publish-npm, publish-github]

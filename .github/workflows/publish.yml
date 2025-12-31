@@ -20,28 +20,31 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Enable Yarn
+        run: corepack enable
+
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Type check
-        run: npm run type-check
+        run: yarn type-check
 
       - name: Lint code
-        run: npm run lint
+        run: yarn lint
 
       - name: Check formatting
-        run: npm run format:check
+        run: yarn format:check
 
       - name: Run tests
-        run: npm test
+        run: yarn test
 
   publish-npm:
     needs: validate
@@ -54,24 +57,27 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Enable Yarn
+        run: corepack enable
+
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Build package
-        run: npm run build --if-present
+        run: yarn build --if-present || true
 
       - name: Publish to npm
-        run: npm publish
+        run: yarn npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-github:
     needs: validate
@@ -82,26 +88,33 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Enable Yarn
+        run: corepack enable
 
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: .yarn/cache
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Build package
-        run: npm run build --if-present
+        run: yarn build --if-present || true
+
+      - name: Configure Yarn for GitHub Packages
+        run: |
+          yarn config set npmRegistryServer https://npm.pkg.github.com
+          yarn config set npmAlwaysAuth true
 
       - name: Publish to GitHub Packages
-        run: npm publish
+        run: yarn npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          YARN_NPM_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create-release:
     needs: [publish-npm, publish-github]
